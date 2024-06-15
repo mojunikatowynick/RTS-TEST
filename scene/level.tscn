@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://cpxq07dhs2tam"]
+
+[ext_resource type="Texture2D" uid="uid://8xvg22ypywwl" path="res://graphic/grass.png" id="1_73qhw"]
+[ext_resource type="Texture2D" uid="uid://bj485vaby6gif" path="res://graphic/lava.png" id="2_uxe3v"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_swji7"]
+vertices = PackedVector2Array(8, 8, -8, 8, -8, -8, 8, -8)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)])
+source_geometry_group_name = &"navigation_polygon_source_group"
+agent_radius = 0.0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bvskn"]
+texture = ExtResource("1_73qhw")
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/navigation_layer_0/polygon = SubResource("NavigationPolygon_swji7")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_7faga"]
+texture = ExtResource("2_uxe3v")
+0:0/0 = 0
+0:0/0/physics_layer_0/linear_velocity = Vector2(0, 0)
+0:0/0/physics_layer_0/angular_velocity = 0.0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+
+[sub_resource type="TileSet" id="TileSet_4j0gf"]
+physics_layer_0/collision_layer = 1
+physics_layer_0/collision_mask = 2
+navigation_layer_0/layers = 1
+sources/0 = SubResource("TileSetAtlasSource_bvskn")
+sources/1 = SubResource("TileSetAtlasSource_7faga")
+
+[node name="level" type="TileMap"]
+tile_set = SubResource("TileSet_4j0gf")
+format = 2
+layer_0/name = "navigation"
+layer_1/name = "collision"
+layer_1/tile_data = PackedInt32Array()
