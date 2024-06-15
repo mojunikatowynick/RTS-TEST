@@ -1,0 +1,51 @@
+[gd_scene load_steps=8 format=3 uid="uid://8d43on1rbjy8"]
+
+[ext_resource type="Script" path="res://scene/bob.gd" id="1_517lk"]
+[ext_resource type="Texture2D" uid="uid://13bu38vaj58p" path="res://graphic/bob.png" id="2_4o4qt"]
+[ext_resource type="Script" path="res://scene/StateMachine.gd" id="2_oyyjj"]
+[ext_resource type="Script" path="res://scene/Active.gd" id="3_hqjt0"]
+[ext_resource type="Script" path="res://scene/StandBy.gd" id="4_5nah0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jf15f"]
+size = Vector2(16, 16)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_l3hps"]
+radius = 31.0
+
+[node name="bob" type="CharacterBody2D" node_paths=PackedStringArray("active_rec") groups=["Unit"]]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_517lk")
+active_rec = NodePath("ActiveRec")
+
+[node name="ActiveRec" type="Polygon2D" parent="."]
+visible = false
+position = Vector2(1.81818, 0)
+scale = Vector2(0.909091, 1.11111)
+color = Color(1, 0.686275, 0, 1)
+polygon = PackedVector2Array(9, -9, 9, 9, -13, 9, -13, -9, -13, -9)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_jf15f")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_4o4qt")
+
+[node name="StateMachine" type="Node" parent="." node_paths=PackedStringArray("initial_state")]
+script = ExtResource("2_oyyjj")
+initial_state = NodePath("StandBy")
+
+[node name="Active" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+script = ExtResource("3_hqjt0")
+player = NodePath("../..")
+
+[node name="StandBy" type="Node" parent="StateMachine" node_paths=PackedStringArray("player")]
+script = ExtResource("4_5nah0")
+player = NodePath("../..")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+
+[node name="Detect" type="Area2D" parent="."]
+
+[node name="Detect" type="CollisionShape2D" parent="Detect"]
+shape = SubResource("CircleShape2D_l3hps")

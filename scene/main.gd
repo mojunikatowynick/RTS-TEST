@@ -2,22 +2,27 @@ extends Node2D
 
 var dragging = false  # are we currently dragging?
 var selected = []  # array of selected units
+var units = []
 var drag_start = Vector2.ZERO  # location where the drag begian
 var select_rect = RectangleShape2D.new()
 
+func _ready():
+	units = $Units.get_children()
+
 func _unhandled_input(event):
+	selection(event)
+	target(event)
+
+func selection(event):
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.pressed:
 			# If the mouse was clicked and nothing is selected, start dragging
-			if selected.size() == 0:
+			#if selected.size() == 0:
+				for item in units:
+					item.selected = false
 				dragging = true
 				drag_start = event.position
-			# Otherwise a click tells the selected units to move
-			else:
-				for item in selected:
-					item.collider.target = event.position
-					item.collider.selected = false
-				selected = []
+			## Otherwise a click tells the selected units to move
 		# If the mouse is released and is dragging, stop dragging and select the units
 		elif dragging:
 			dragging = false
@@ -32,10 +37,18 @@ func _unhandled_input(event):
 			selected = space.intersect_shape(q)
 			for item in selected:
 				item.collider.selected = true
+
 	if event is InputEventMouseMotion and dragging:
 		queue_redraw()
-		
+
+func target(event):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT:
+		if event.pressed:
+			for item in selected:
+				item.collider.target = event.position
+				print(item.collider.target)
+
 func _draw():
 	if dragging:
-		draw_rect(Rect2(drag_start, get_global_mouse_position() - drag_start),
-				Color.YELLOW, false, 2.0)
+		draw_rect(Rect2(drag_start, get_global_mouse_position() - drag_start), Color.YELLOW, false, 2.0)
+
